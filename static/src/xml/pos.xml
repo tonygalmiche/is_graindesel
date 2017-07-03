@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="PosTicket">
+        <!--
+        <div class="test">
+            toto et tutu
+        </div>
+        <p style="page-break-before:always;"> </p>
+        -->
+        <div class="pos-sale-ticket">
+            
+            <div class="pos-center-align"><t t-esc="moment().format('L LT')"/> <t t-esc="order.name"/></div>
+            <br />
+            <!--
+            <t t-esc="widget.pos.company.name"/><br />
+            Phone: <t t-esc="widget.pos.company.phone || ''"/><br />
+            User: <t t-esc="widget.pos.cashier ? widget.pos.cashier.name : widget.pos.user.name"/><br />
+            <br />
+            -->
+            <t t-if="receipt.header">
+                <div style='text-align:center'>
+                    <t t-esc="receipt.header" />
+                </div>
+                <br />
+            </t>
+
+            <t t-if="widget.pos.get_client()">
+                <h1>Facture</h1>
+                <t t-esc="widget.pos.get_client().name" /><br />
+                <t t-esc="widget.pos.get_client().street" /><br />
+                <t t-esc="widget.pos.get_client().city" /><br /><br />
+            </t>
+
+
+            <!-- Recherche si note saisie pour affichage simplifié -->
+            <t t-set='note' t-value='' />
+            <t t-foreach="orderlines" t-as="orderline">
+                <t t-if="orderline.get_note()">
+                    <t t-set='note' t-value='orderline.get_note()'/>
+                </t>
+            </t>
+
+
+            <!-- Recherche du serveur, de la réservation ou de la provenance -->
+            <t t-set='serveur'     t-value='' />
+            <t t-set='reservation' t-value='' />
+            <t t-set='provenance'  t-value='' />
+            <t t-foreach="orderlines" t-as="orderline">
+                <t t-set='categ_id' t-value='orderline.get_product().pos_categ_id[0]' />
+                <t t-set='categ'    t-value='orderline.get_product().pos_categ_id[1]' />
+                <t t-if="categ_id==20">
+                    <t t-set='serveur' t-value='orderline.get_product().display_name'/>
+                </t>
+                <t t-if="categ_id==21">
+                    <t t-set='reservation' t-value='orderline.get_product().display_name'/>
+                </t>
+                <t t-if="categ=='Paramètres / Provenance du client'">
+                    <t t-set='provenance' t-value='orderline.get_product().display_name'/>
+                </t>
+
+            </t>
+            <t t-if="serveur!=''">
+                Serveur : <t t-esc="serveur" /><br /><br />
+            </t>
+            <t t-if="reservation!=''">
+                Réservation : <t t-esc="reservation" /><br />
+            </t>
+            <t t-if="provenance!=''">
+                Provenance : <t t-esc="provenance" /><br />
+            </t>
+            <br />
+
+            <!-- Affichage simplifié avec la note -->
+            <t t-if="note!=''">
+                <b><t t-esc="note" /></b><br />
+            </t>
+
+
+            <!-- Affichage détaillé si pas de note -->
+            <t t-if="note==''">
+                <table class='receipt-orderlines'>
+                    <colgroup>
+                        <col width='50%' />
+                        <col width='25%' />
+                        <col width='25%' />
+                    </colgroup>
+                    <t t-set='i' t-value='0' />
+                    <t t-foreach="orderlines" t-as="orderline">
+                        <t t-set='categ_id' t-value='orderline.get_product().pos_categ_id[0]' />
+                        <t t-set='categ'    t-value='orderline.get_product().pos_categ_id[1]' />
+                        <t t-if="categ_id!=20 and categ_id!=21 and categ!='Paramètres / Provenance du client'">
+                            <tr>
+                                <td>
+                                    <t t-esc="orderline.get_product().display_name"/>
+                                    <br />
+                                    <!--
+                                    TODO : Je n'ai pas réussi à récupérer la séquence de la catégorie
+                                    TODO : Je prend donc en dur son id
+                                    Categ=<t t-esc="orderline.get_product().pos_categ_id"/><br />
+                                    Categ=<t t-esc="orderline.get_product().pos_categ_id[0]"/><br />
+                                    Categ=<t t-esc="orderline.get_product().pos_categ_id[1]"/><br />
+                                    <t t-set='categ_id' t-value='orderline.get_product().pos_categ_id[0]' />
+                                    <t t-set='categ'    t-value='widget.pos.db.get_category_by_id(categ_id)' />
+                                    categ_id = <t t-esc="categ_id"/><br />
+                                    categ    = <t t-esc="categ.name"/><br />
+                                    Categ=<t t-esc="widget.pos.db.get_category_by_id(1).id"/><br />
+                                    i = <t t-esc="i"/><br />
+                                    -->
+                                     <t t-if="orderline.get_discount() > 0">
+                                        <div class="pos-disc-font">
+                                            With a <t t-esc="orderline.get_discount()"/>% discount
+                                        </div>
+                                    </t>
+                                </td>
+                                <td class="pos-right-align">
+                                    <t t-esc="orderline.get_quantity_str_with_unit()"/>
+                                </td>
+                                <td class="pos-right-align">
+                                    <t t-esc="widget.format_currency(orderline.get_display_price())"/>
+                                </td>
+                            </tr>
+                            <t t-set='i' t-value='i+1' />
+                            <t t-if="i > 4">
+                                <t t-set='i' t-value='0' />
+                                <tr style="page-break-before:always" class="page-break"> </tr>
+                            </t>
+                        </t>
+                    </t>
+
+
+                </table>
+            </t>
+            <br />
+
+
+            <table class='receipt-total'>
+                <tr>
+                    <td>Subtotal:</td>
+                    <td class="pos-right-align">
+                        <t t-esc="widget.format_currency(order.get_total_without_tax())"/>
+                    </td>
+                </tr>
+                <t t-foreach="order.get_tax_details()" t-as="taxdetail">
+                    <tr>
+                        <td><t t-esc="taxdetail.name" /></td>
+                        <td class="pos-right-align">
+                            <t t-esc="widget.format_currency(taxdetail.amount)" />
+                        </td>
+                    </tr>
+                </t>
+
+
+                <t t-set='remise' t-value='widget.format_currency(order.get_total_discount())' />
+                <t t-if="remise>0">
+                    <tr>
+                        <td>Remise:</td>
+                        <td class="pos-right-align">
+                            <t t-esc="widget.format_currency(order.get_total_discount())"/>
+                        </td>
+                    </tr>
+                </t>
+                <tr class="emph">
+                    <td>Total:</td>
+                    <td class="pos-right-align">
+                        <t t-esc="widget.format_currency(order.get_total_with_tax())"/>
+                    </td>
+                </tr>
+            </table>
+            <br />
+            <table class='receipt-paymentlines'>
+                <t t-foreach="paymentlines" t-as="line">
+                  <tr>
+                      <td>
+                          <t t-esc="line.name"/>
+                      </td>
+                      <td class="pos-right-align">
+                          <t t-esc="widget.format_currency(line.get_amount())"/>
+                      </td>
+                  </tr>
+                </t>
+            </table>
+            <br />
+            <table class='receipt-change'>
+                <tr><td>Change:</td><td class="pos-right-align">
+                    <t t-esc="widget.format_currency(order.get_change())"/>
+                    </td></tr>
+            </table>
+            <t t-if="receipt.footer">
+                <br />
+                <div style='text-align:center'>
+                    <t t-esc="receipt.footer" />
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>
