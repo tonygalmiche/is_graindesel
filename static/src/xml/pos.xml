@@ -47,18 +47,16 @@
             <t t-set='reservation' t-value='' />
             <t t-set='provenance'  t-value='' />
             <t t-foreach="orderlines" t-as="orderline">
-                <t t-set='categ_id' t-value='orderline.get_product().pos_categ_id[0]' />
                 <t t-set='categ'    t-value='orderline.get_product().pos_categ_id[1]' />
-                <t t-if="categ_id==20">
+                <t t-if="categ=='Paramètres / Serveur'">
                     <t t-set='serveur' t-value='orderline.get_product().display_name'/>
                 </t>
-                <t t-if="categ_id==21">
+                <t t-if="categ=='Paramètres / Réservation'">
                     <t t-set='reservation' t-value='orderline.get_product().display_name'/>
                 </t>
                 <t t-if="categ=='Paramètres / Provenance du client'">
                     <t t-set='provenance' t-value='orderline.get_product().display_name'/>
                 </t>
-
             </t>
             <t t-if="serveur!=''">
                 Serveur : <t t-esc="serveur" /><br /><br />
@@ -87,26 +85,12 @@
                     </colgroup>
                     <t t-set='i' t-value='0' />
                     <t t-foreach="orderlines" t-as="orderline">
-                        <t t-set='categ_id' t-value='orderline.get_product().pos_categ_id[0]' />
                         <t t-set='categ'    t-value='orderline.get_product().pos_categ_id[1]' />
-                        <t t-if="categ_id!=20 and categ_id!=21 and categ!='Paramètres / Provenance du client'">
+                        <t t-if="categ!='Paramètres / Serveur' and categ!='Paramètres / Réservation' and categ!='Paramètres / Provenance du client'">
                             <tr>
                                 <td>
                                     <t t-esc="orderline.get_product().display_name"/>
                                     <br />
-                                    <!--
-                                    TODO : Je n'ai pas réussi à récupérer la séquence de la catégorie
-                                    TODO : Je prend donc en dur son id
-                                    Categ=<t t-esc="orderline.get_product().pos_categ_id"/><br />
-                                    Categ=<t t-esc="orderline.get_product().pos_categ_id[0]"/><br />
-                                    Categ=<t t-esc="orderline.get_product().pos_categ_id[1]"/><br />
-                                    <t t-set='categ_id' t-value='orderline.get_product().pos_categ_id[0]' />
-                                    <t t-set='categ'    t-value='widget.pos.db.get_category_by_id(categ_id)' />
-                                    categ_id = <t t-esc="categ_id"/><br />
-                                    categ    = <t t-esc="categ.name"/><br />
-                                    Categ=<t t-esc="widget.pos.db.get_category_by_id(1).id"/><br />
-                                    i = <t t-esc="i"/><br />
-                                    -->
                                      <t t-if="orderline.get_discount() > 0">
                                         <div class="pos-disc-font">
                                             With a <t t-esc="orderline.get_discount()"/>% discount
@@ -127,8 +111,6 @@
                             </t>
                         </t>
                     </t>
-
-
                 </table>
             </t>
             <br />
