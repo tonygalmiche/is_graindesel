@@ -58,7 +58,6 @@
                     <t t-set='provenance' t-value='orderline.get_product().display_name'/>
                 </t>
             </t>
-            <!--
             <t t-if="serveur!=''">
                 Serveur : <t t-esc="serveur" /><br /><br />
             </t>
@@ -69,7 +68,6 @@
                 Provenance : <t t-esc="provenance" /><br />
             </t>
             <br />
-            -->
 
             <!-- Affichage simplifié avec la note -->
             <t t-if="note!=''">
@@ -107,12 +105,9 @@
                                 </td>
                             </tr>
                             <t t-set='i' t-value='i+1' />
-                            <!-- 12 lignes sur le ticket avec de faire un saut de page -->
-                            <t t-if="i > 12">
+                            <t t-if="i > 4">
                                 <t t-set='i' t-value='0' />
                                 <tr style="page-break-before:always" class="page-break"> </tr>
-                                <tr><td class="haut-page" style="height:60mm"> </td></tr>
-
                             </t>
                         </t>
                     </t>
@@ -123,14 +118,14 @@
 
             <table class='receipt-total'>
                 <tr>
-                    <td>Total HT : </td>
+                    <td>Subtotal:</td>
                     <td class="pos-right-align">
                         <t t-esc="widget.format_currency(order.get_total_without_tax())"/>
                     </td>
                 </tr>
                 <t t-foreach="order.get_tax_details()" t-as="taxdetail">
                     <tr>
-                        <td><t t-esc="taxdetail.name" /> : </td>
+                        <td><t t-esc="taxdetail.name" /></td>
                         <td class="pos-right-align">
                             <t t-esc="widget.format_currency(taxdetail.amount)" />
                         </td>
@@ -141,14 +136,14 @@
                 <t t-set='remise' t-value='widget.format_currency(order.get_total_discount())' />
                 <t t-if="remise>0">
                     <tr>
-                        <td>Remise :</td>
+                        <td>Remise:</td>
                         <td class="pos-right-align">
                             <t t-esc="widget.format_currency(order.get_total_discount())"/>
                         </td>
                     </tr>
                 </t>
                 <tr class="emph">
-                    <td>Total TTC :</td>
+                    <td>Total:</td>
                     <td class="pos-right-align">
                         <t t-esc="widget.format_currency(order.get_total_with_tax())"/>
                     </td>

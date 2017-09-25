@@ -1,7 +1,8 @@
 
 
+
 .pos .pos-sale-ticket {
-    width: 600px;
+    width: 650px;
     font-size: 14px;
 }
 
@@ -11,73 +12,21 @@
     left:10%;
 }
 
-.pos .page-break {
-    height:0mm;
-}
-
-/*
-.pos .pos-sale-ticket3 {
-    text-align: left;
-    width: 600px;
-    background-color: white;
-    margin: 20px;
-    padding: 15px;
-    font-size: 14px;
-    padding-bottom:30px;
-    display: inline-block;
-    font-family: "Inconsolata";
-    border: solid 1px rgb(220,220,220);
-    border-radius: 3px;
-    overflow: hidden;
-}
-.pos .pos-sale-ticket3 pre{
-    font-family: "Inconsolata";
-}
-.pos .pos-sale-ticket3 .emph{
-    font-size: 20px;
-    margin:5px;
-}
-.pos .pos-sale-ticket3 table {
-    width: 100%;
-    border: 0;
-    table-layout: fixed;
-}
-.pos .pos-sale-ticket3 table td {
-    border: 0;
-    word-wrap: break-word;
-}
-*/
-
-
 
 
 @media print {
-
     .pos {
         overflow: auto !important;
     }
-
     .pos .pos-sale-ticket{
-        margin-top : 60mm  !important;
-        margin-left: 0mm   !important;
-
+        margin-top : 10mm  !important;
+        margin-left: 10mm   !important;
         padding-left : 1mm  !important;
         padding-right: 1mm   !important;
-
-        width      : 114mm !important;
-        border     : solid 1px black !important;
-
-
+        width      : 127mm           !important;
+        border     : solid 1px green !important;
         overflow: initial !important;
-
-
         display: block !important;
-
-        /*
-
-        overflow-x: initial !important;
-        overflow-y: initial !important;
-        */
     }
 
 
@@ -86,12 +35,8 @@
         table-layout: initial !important;
     }
 
-    .pos .page-break {
-        height:60mm !important;
-    }
-
-
 
 }
+
 
 

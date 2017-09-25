@@ -10,9 +10,14 @@
             </xpath>
             <field name="name" position="after">
                 <field name="is_nb_couverts"/>
+                <field name="is_couvert_moyen"/>
                 <field name="is_serveur_id"/>
                 <field name="is_origine_id"/>
                 <field name="is_reservation_id"/>
+            </field>
+            <field name="date_order" position="after">
+                <field name="is_journee_service"/>
+                <field name="is_service"/>
             </field>
         </field>
     </record>
@@ -28,7 +33,10 @@
                     <field name="pos_reference"/>
                     <field name="partner_id"/>
                     <field name="date_order"/>
-                    <field name="is_nb_couverts"/>
+                    <field name="is_journee_service"/>
+                    <field name="is_service"/>
+                    <field name="is_nb_couverts" sum="Total"/>
+                    <field name="is_couvert_moyen"/>
                     <field name="is_serveur_id"/>
                     <field name="is_origine_id"/>
                     <field name="is_reservation_id"/>
@@ -40,6 +48,27 @@
             </tree>
         </field>
     </record>
+
+
+
+    <record id="is_view_pos_order_filter" model="ir.ui.view">
+        <field name="name">is_view_pos_order_filter</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_order_filter" />
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="is_journee_service"/>
+                <field name="is_service"/>
+                <field name="is_serveur_id"/>
+                <field name="is_origine_id"/>
+                <field name="is_reservation_id"/>
+                <field name="partner_id"/>
+            </field>
+        </field>
+    </record>
+
+
+
 </odoo>
 
 

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="is_journal_des_ventes_form_view" model="ir.ui.view">
+        <field name="name">is_journal_des_ventes_view</field>
+        <field name="model">is.journal.des.ventes</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="nb_couvert_midi"/>
+                        <field name="nb_couvert_soir"/>
+                        <field name="nb_couvert_total"/>
+                        <field name="couvert_moyen"/>
+                        <field name="nb_ticket"/>
+                        <field name="reglement_cb"/>
+                        <field name="reglement_cheque"/>
+                        <field name="reglement_espece"/>
+                        <field name="reglement_total"/>
+                        <field name="facturation_10"/>
+                        <field name="facturation_20"/>
+                        <field name="facturation_ttc"/>
+                        <field name="facturation_ht"/>
+                        <field name="ticket_moyen_ttc"/>
+                        <field name="ticket_moyen_ht"/>
+                        <field name="ecart_fact_regl"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="is_journal_des_ventes_tree_view" model="ir.ui.view">
+        <field name="name">is_journal_des_ventes_view</field>
+        <field name="model">is.journal.des.ventes</field>
+        <field name="arch" type="xml">
+        <tree>
+            <field name="name"/>
+            <field name="nb_couvert_midi"  sum="Total"/>
+            <field name="nb_couvert_soir"  sum="Total"/>
+            <field name="nb_couvert_total" sum="Total"/>
+            <field name="couvert_moyen"/>
+            <field name="nb_ticket"        sum="Total"/>
+            <field name="reglement_cb"     sum="Total"/>
+            <field name="reglement_cheque" sum="Total"/>
+            <field name="reglement_espece" sum="Total"/>
+            <field name="reglement_total"  sum="Total"/>
+            <field name="facturation_10"   sum="Total"/>
+            <field name="facturation_20"   sum="Total"/>
+            <field name="facturation_ttc"  sum="Total"/>
+            <field name="facturation_ht"   sum="Total"/>
+            <field name="ticket_moyen_ttc"/>
+            <field name="ticket_moyen_ht"/>
+            <field name="ecart_fact_regl"  sum="Total"/>
+        </tree>
+        </field>
+    </record>
+
+    <record id="is_journal_des_ventes_action" model="ir.actions.act_window">
+        <field name="name">Journal des ventes</field>
+        <field name="res_model">is.journal.des.ventes</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <!--
+    <menuitem 
+        id="is_journal_des_ventes_menu" 
+        sequence="20" 
+        name="Journal des ventes"   
+        parent="point_of_sale.menu_point_rep" 
+        action="is_journal_des_ventes_action" 
+    />
+    -->
+</odoo>

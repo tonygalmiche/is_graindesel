@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="is_journal_des_ventes_wizard_view" model="ir.ui.view">
+        <field name="name">is_journal_des_ventes_wizard_view</field>
+        <field name="model">is.journal.des.ventes.wizard</field>
+        <field name="arch" type="xml">
+        <form>
+            <group>
+                <field name="date_debut"/>
+                <field name="date_fin"/>
+            </group>
+            <footer>
+                <button name="journal_des_ventes_action" string="OK" type="object" default_focus="1" class="oe_highlight"/>
+                ou 
+                <button string="Annuler" class="oe_link" special="cancel" />
+            </footer>
+        </form>
+        </field>
+    </record>
+    <record id="is_journal_des_ventes_wizard_action" model="ir.actions.act_window">
+        <field name="name">Journal des ventes</field>
+        <field name="res_model">is.journal.des.ventes.wizard</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="is_journal_des_ventes_wizard_view"/>
+        <field name="target">new</field>
+    </record>
+    <menuitem 
+        id="is_journal_des_ventes_wizard_menu" 
+        sequence="10" 
+        name="Journal des ventes"   
+        parent="point_of_sale.menu_point_rep" 
+        action="is_journal_des_ventes_wizard_action" 
+    />
+</odoo>

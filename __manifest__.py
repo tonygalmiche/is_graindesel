@@ -26,8 +26,11 @@ InfoSaône - Module Odoo Grain de Sel
         'calendar',
 ],
     'data' : [
+        'security/ir.model.access.csv',
         'views/point_of_sale.xml',
         'views/pos_order_view.xml',
+        'views/is_journal_des_ventes_view.xml',
+        'wizard/is_journal_des_ventes_wizard_view.xml',
     ],
     'installable': True,
     'application': True,
