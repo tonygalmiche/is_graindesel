@@ -20,7 +20,7 @@ import datetime
 class IsJournalDesVentesWizard(models.TransientModel):
     _name = 'is.journal.des.ventes.wizard'
 
-    date_debut = fields.Date('Date de début', required=True,  default='2017-09-25')
+    date_debut = fields.Date('Date de début', required=True,  default=lambda *a: time.strftime('%Y-%m-%d'))
     date_fin   = fields.Date('Date de fin'  , required=True,  default=lambda *a: time.strftime('%Y-%m-%d'))
 
 
@@ -67,12 +67,13 @@ class IsJournalDesVentesWizard(models.TransientModel):
             select sum(absl.amount)
             from account_bank_statement_line absl inner join account_journal aj on absl.journal_id=aj.id
                                                   inner join  pos_order po on absl.pos_statement_id=po.id
-            where po.is_journee_service='"""+str(journee_service)+"""'
+            where 
+                po.is_journee_service='"""+str(journee_service)+"""'  
         """
-
         if code_journal:
             sql=sql+" and aj.code='"+code_journal+"' "
-
+        else:
+            sql=sql+" and aj.code not in ('BC1','BC2','BC3') "
         cr.execute(sql)
         reglement=0
         for row in cr.fetchall():
@@ -122,6 +123,8 @@ class IsJournalDesVentesWizard(models.TransientModel):
                     pol.id,
                     round(sum(pol.price_unit*pol.qty),2) ttc
                 from pos_order_line pol inner join pos_order po on pol.order_id=po.id
+                                        inner join account_tax_pos_order_line_rel rel on rel.pos_order_line_id=pol.id
+                                        inner join account_tax at on at.id=rel.account_tax_id
                 where po.is_journee_service='"""+str(journee_service)+"""' """
         if service:
             sql=sql+" and po.is_service='"+service+"' "
@@ -202,18 +205,25 @@ class IsJournalDesVentesWizard(models.TransientModel):
                     if nb_ticket!=0:
                         ticket_moyen_ht=ht/nb_ticket
 
+                    nb_couvert_total=self.nb_couvert(date_debut)
+                    couvert_moyen=0
+                    if nb_couvert_total!=0:
+                        couvert_moyen=ttc/nb_couvert_total
+
+
+
                     jdv.nb_couvert_midi         = self.nb_couvert(date_debut,'midi')
                     jdv.nb_couvert_soir         = self.nb_couvert(date_debut,'soir')
-                    jdv.nb_couvert_total        = self.nb_couvert(date_debut)
-                    jdv.couvert_moyen           = 10
+                    jdv.nb_couvert_total        = nb_couvert_total
+                    jdv.couvert_moyen           = couvert_moyen
                     jdv.nb_ticket_midi          = nb_ticket_midi
                     jdv.nb_ticket_soir          = nb_ticket_soir
                     jdv.nb_ticket               = nb_ticket
-                    jdv.reglement_cb            = self.reglement(date_debut,'BNK2')
-                    jdv.reglement_cheque        = self.reglement(date_debut,'BNK3')
-                    jdv.reglement_espece        = self.reglement(date_debut,'CSH1')
-                    jdv.reglement_differe       = self.reglement(date_debut,'xxx')
-                    jdv.reglement_bon_cadeau    = self.reglement(date_debut,'xxx')
+                    jdv.reglement_cb            = self.reglement(date_debut,'CB')
+                    jdv.reglement_cheque        = self.reglement(date_debut,'CH')
+                    jdv.reglement_espece        = self.reglement(date_debut,'ESP')
+                    jdv.reglement_differe       = self.reglement(date_debut,'DIFF')
+                    jdv.reglement_bon_cadeau    = self.reglement(date_debut,'BC')
                     jdv.reglement_total         = self.reglement(date_debut)
                     jdv.facturation_10          = self.tva(date_debut,8)
                     jdv.facturation_20          = self.tva(date_debut,1)
@@ -230,9 +240,9 @@ class IsJournalDesVentesWizard(models.TransientModel):
                     #jdv.remise_banque           = 10
                     #jdv.ecart_fact_regl         = 10
                     #jdv.trop_percu              = 10
-                    jdv.achat_bon_cadeau_cb     = self.reglement(date_debut,'xxx')
-                    jdv.achat_bon_cadeau_cheque = self.reglement(date_debut,'xxx')
-                    jdv.achat_bon_cadeau_espece = self.reglement(date_debut,'xxx')
+                    jdv.achat_bon_cadeau_cb     = self.reglement(date_debut,'BC2')
+                    jdv.achat_bon_cadeau_cheque = self.reglement(date_debut,'BC3')
+                    jdv.achat_bon_cadeau_espece = self.reglement(date_debut,'BC1')
 
                     date_debut = datetime.datetime.strptime(date_debut, '%Y-%m-%d')
                     date_debut = date_debut + datetime.timedelta(days=1)
