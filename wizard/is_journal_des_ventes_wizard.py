@@ -92,11 +92,15 @@ class IsJournalDesVentesWizard(models.TransientModel):
                 select 
                     po.id order_id,
                     pol.id,
-                    round(sum(pol.price_unit*pol.qty-pol.price_unit*pol.qty/(1+at.amount/100)),2) tva
+                    round(sum(pol.price_unit*pol.qty),2) tva
                 from pos_order_line pol inner join pos_order po on pol.order_id=po.id
                                         inner join account_tax_pos_order_line_rel rel on rel.pos_order_line_id=pol.id
                                         inner join account_tax at on at.id=rel.account_tax_id
                 where po.is_journee_service='"""+str(journee_service)+"""' """
+
+        #round(sum(pol.price_unit*pol.qty-pol.price_unit*pol.qty/(1+at.amount/100)),2) tva
+
+
         if tax_id:
             sql=sql+" and at.id="+str(tax_id)+" "
         sql=sql+"""
@@ -208,14 +212,15 @@ class IsJournalDesVentesWizard(models.TransientModel):
                     nb_couvert_total=self.nb_couvert(date_debut)
                     couvert_moyen=0
                     if nb_couvert_total!=0:
-                        couvert_moyen=ttc/nb_couvert_total
-
+                        couvert_moyen    = ttc / nb_couvert_total
+                        couvert_moyen_ht = ht / nb_couvert_total
 
 
                     jdv.nb_couvert_midi         = self.nb_couvert(date_debut,'midi')
                     jdv.nb_couvert_soir         = self.nb_couvert(date_debut,'soir')
                     jdv.nb_couvert_total        = nb_couvert_total
                     jdv.couvert_moyen           = couvert_moyen
+                    jdv.couvert_moyen_ht        = couvert_moyen_ht
                     jdv.nb_ticket_midi          = nb_ticket_midi
                     jdv.nb_ticket_soir          = nb_ticket_soir
                     jdv.nb_ticket               = nb_ticket

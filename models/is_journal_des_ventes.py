@@ -13,6 +13,7 @@ class IsJournalDesVentes(models.Model):
     nb_couvert_soir         = fields.Integer('Nb couverts soir')
     nb_couvert_total        = fields.Integer('Nb couverts total')
     couvert_moyen           = fields.Float('Couvert moyen TTC')
+    couvert_moyen_ht        = fields.Float('Couvert moyen HT')
     nb_ticket_midi          = fields.Integer('Nb tickets midi')
     nb_ticket_soir          = fields.Integer('Nb tickets soir')
     nb_ticket               = fields.Integer('Nb tickets')

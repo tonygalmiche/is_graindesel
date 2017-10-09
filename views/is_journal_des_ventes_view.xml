@@ -13,6 +13,7 @@
                             <field name="nb_couvert_soir"/>
                             <field name="nb_couvert_total"/>
                             <field name="couvert_moyen"/>
+                            <field name="couvert_moyen_ht"/>
                             <field name="nb_ticket_midi"/>
                             <field name="nb_ticket_soir"/>
                             <field name="nb_ticket"/>
@@ -61,6 +62,7 @@
                 <field name="nb_couvert_soir"         sum="Total"/>
                 <field name="nb_couvert_total"        sum="Total"/>
                 <field name="couvert_moyen"/>
+                <field name="couvert_moyen_ht"/>
                 <field name="nb_ticket_midi"          sum="Total"/>
                 <field name="nb_ticket_soir"          sum="Total"/>
                 <field name="nb_ticket"               sum="Total"/>
