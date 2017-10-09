@@ -211,6 +211,7 @@ class IsJournalDesVentesWizard(models.TransientModel):
 
                     nb_couvert_total=self.nb_couvert(date_debut)
                     couvert_moyen=0
+                    couvert_moyen_ht=0
                     if nb_couvert_total!=0:
                         couvert_moyen    = ttc / nb_couvert_total
                         couvert_moyen_ht = ht / nb_couvert_total
