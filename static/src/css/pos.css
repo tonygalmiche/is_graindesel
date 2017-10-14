@@ -19,12 +19,12 @@
         overflow: auto !important;
     }
     .pos .pos-sale-ticket{
-        margin-top : 10mm  !important;
+        margin-top : 50mm  !important;
         margin-left: 10mm   !important;
         padding-left : 1mm  !important;
         padding-right: 1mm   !important;
         width      : 127mm           !important;
-        border     : solid 1px green !important;
+        /*border     : solid 5px green !important;*/
         overflow: initial !important;
         display: block !important;
     }

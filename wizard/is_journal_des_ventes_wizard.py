@@ -83,7 +83,7 @@ class IsJournalDesVentesWizard(models.TransientModel):
 
 
     @api.multi
-    def tva(self, journee_service,tax_id=False):
+    def tva(self, journee_service,tax_id=False, service=False):
         cr=self._cr
         sql="""
             select
@@ -97,12 +97,11 @@ class IsJournalDesVentesWizard(models.TransientModel):
                                         inner join account_tax_pos_order_line_rel rel on rel.pos_order_line_id=pol.id
                                         inner join account_tax at on at.id=rel.account_tax_id
                 where po.is_journee_service='"""+str(journee_service)+"""' """
-
-        #round(sum(pol.price_unit*pol.qty-pol.price_unit*pol.qty/(1+at.amount/100)),2) tva
-
-
         if tax_id:
             sql=sql+" and at.id="+str(tax_id)+" "
+
+        if service:
+            sql=sql+" and po.is_service='"+service+"' "
         sql=sql+"""
                 group by po.id,pol.id
             ) pol
@@ -145,7 +144,7 @@ class IsJournalDesVentesWizard(models.TransientModel):
 
 
     @api.multi
-    def ht(self, journee_service,tax_id=False):
+    def ht(self, journee_service,tax_id=False, service=False):
         cr=self._cr
         sql="""
             select
@@ -158,7 +157,12 @@ class IsJournalDesVentesWizard(models.TransientModel):
                 from pos_order_line pol inner join pos_order po on pol.order_id=po.id
                                         inner join account_tax_pos_order_line_rel rel on rel.pos_order_line_id=pol.id
                                         inner join account_tax at on at.id=rel.account_tax_id
-                where po.is_journee_service='"""+str(journee_service)+"""'
+                where po.is_journee_service='"""+str(journee_service)+"""' """
+
+        if service:
+            sql=sql+" and po.is_service='"+service+"' "
+
+        sql=sql+"""
                 group by po.id,pol.id
             ) pol
         """
@@ -179,76 +183,88 @@ class IsJournalDesVentesWizard(models.TransientModel):
             if obj.date_fin>=obj.date_debut:
                 jdv_obj=self.env['is.journal.des.ventes']
                 while date_debut<=date_fin:
-                    jdvs=jdv_obj.search([ ('name', '=', date_debut)])
-                    if len(jdvs)==0:
-                        vals = {
-                            'name':        date_debut,
-                        }
-                        jdv = jdv_obj.create(vals)
-                    else:
-                        jdv=jdvs[0]
+                    nb_ticket = self.nb_ticket(date_debut)
+                    if nb_ticket:
+                        jdvs=jdv_obj.search([ ('name', '=', date_debut)])
+                        if len(jdvs)==0:
+                            vals = {
+                                'name':        date_debut,
+                            }
+                            jdv = jdv_obj.create(vals)
+                        else:
+                            jdv=jdvs[0]
 
-                    nb_ticket      = self.nb_ticket(date_debut)
-                    nb_ticket_midi = self.nb_ticket(date_debut,'midi')
-                    nb_ticket_soir = self.nb_ticket(date_debut,'soir')
-                    ht             = self.ht(date_debut)
-                    ttc            = self.ttc(date_debut)
-                    ttc_midi       = self.ttc(date_debut,'midi')
-                    ttc_soir       = self.ttc(date_debut,'soir')
-
-                    ticket_moyen_midi=0
-                    if nb_ticket_midi!=0:
-                        ticket_moyen_midi=ttc_midi/nb_ticket_midi
-                    ticket_moyen_soir=0
-                    if nb_ticket_soir!=0:
-                        ticket_moyen_soir=ttc_soir/nb_ticket_soir
-                    ticket_moyen_ttc=0
-                    if nb_ticket!=0:
-                        ticket_moyen_ttc=ttc/nb_ticket
-                    ticket_moyen_ht=0
-                    if nb_ticket!=0:
-                        ticket_moyen_ht=ht/nb_ticket
-
-                    nb_couvert_total=self.nb_couvert(date_debut)
-                    couvert_moyen=0
-                    couvert_moyen_ht=0
-                    if nb_couvert_total!=0:
-                        couvert_moyen    = ttc / nb_couvert_total
-                        couvert_moyen_ht = ht / nb_couvert_total
+                        ht             = self.ht(date_debut)
+                        ttc            = self.ttc(date_debut)
+                        ttc_midi       = self.ttc(date_debut,'midi')
+                        ttc_soir       = self.ttc(date_debut,'soir')
 
 
-                    jdv.nb_couvert_midi         = self.nb_couvert(date_debut,'midi')
-                    jdv.nb_couvert_soir         = self.nb_couvert(date_debut,'soir')
-                    jdv.nb_couvert_total        = nb_couvert_total
-                    jdv.couvert_moyen           = couvert_moyen
-                    jdv.couvert_moyen_ht        = couvert_moyen_ht
-                    jdv.nb_ticket_midi          = nb_ticket_midi
-                    jdv.nb_ticket_soir          = nb_ticket_soir
-                    jdv.nb_ticket               = nb_ticket
-                    jdv.reglement_cb            = self.reglement(date_debut,'CB')
-                    jdv.reglement_cheque        = self.reglement(date_debut,'CH')
-                    jdv.reglement_espece        = self.reglement(date_debut,'ESP')
-                    jdv.reglement_differe       = self.reglement(date_debut,'DIFF')
-                    jdv.reglement_bon_cadeau    = self.reglement(date_debut,'BC')
-                    jdv.reglement_total         = self.reglement(date_debut)
-                    jdv.facturation_10          = self.tva(date_debut,8)
-                    jdv.facturation_20          = self.tva(date_debut,1)
-                    jdv.facturation_ht          = ht
-                    jdv.facturation_ttc         = ttc
-                    jdv.facturation_ttc_midi    = ttc_midi
-                    jdv.facturation_ttc_soir    = ttc_soir
-                    jdv.ticket_moyen_midi       = ticket_moyen_midi
-                    jdv.ticket_moyen_soir       = ticket_moyen_soir
-                    jdv.ticket_moyen_ttc        = ticket_moyen_ttc
-                    jdv.ticket_moyen_ht         = ticket_moyen_ht
-                    #jdv.montant_caisse          = 10
-                    #jdv.ecart_caisse            = 10
-                    #jdv.remise_banque           = 10
-                    #jdv.ecart_fact_regl         = 10
-                    #jdv.trop_percu              = 10
-                    jdv.achat_bon_cadeau_cb     = self.reglement(date_debut,'BC2')
-                    jdv.achat_bon_cadeau_cheque = self.reglement(date_debut,'BC3')
-                    jdv.achat_bon_cadeau_espece = self.reglement(date_debut,'BC1')
+                        nb_couvert_total=self.nb_couvert(date_debut)
+                        couvert_moyen=0
+                        couvert_moyen_ht=0
+                        if nb_couvert_total!=0:
+                            couvert_moyen    = ttc / nb_couvert_total
+                            couvert_moyen_ht = ht / nb_couvert_total
+
+
+                        nb_couvert_soir = self.nb_couvert(date_debut,'soir')
+                        nb_couvert_midi = self.nb_couvert(date_debut,'midi')
+                        jour_ouvert=0
+                        if nb_couvert_midi:
+                            jour_ouvert=jour_ouvert+0.5
+                        if nb_couvert_soir:
+                            jour_ouvert=jour_ouvert+0.5
+
+                        ht_midi=self.ht(date_debut,False, 'midi')
+                        couvert_moyen_midi=0
+                        if nb_couvert_midi:
+                            couvert_moyen_midi=ht_midi/nb_couvert_midi
+
+                        ht_soir=self.ht(date_debut,False, 'soir')
+                        couvert_moyen_soir=0
+                        if nb_couvert_soir:
+                            couvert_moyen_soir=ht_soir/nb_couvert_soir
+
+
+                        jdv.jour_ouvert             = jour_ouvert
+
+                        jdv.nb_couvert_midi         = nb_couvert_midi
+                        jdv.facturation_10_midi     = self.tva(date_debut,8,'midi')
+                        jdv.facturation_20_midi     = self.tva(date_debut,1,'midi')
+                        jdv.facturation_ttc_midi    = ttc_midi
+                        jdv.facturation_ht_midi     = ht_midi
+                        jdv.couvert_moyen_midi      = couvert_moyen_midi
+
+                        jdv.nb_couvert_soir         = nb_couvert_soir
+                        jdv.facturation_10_soir     = self.tva(date_debut,8,'soir')
+                        jdv.facturation_20_soir     = self.tva(date_debut,1,'soir')
+                        jdv.facturation_ttc_soir    = ttc_soir
+                        jdv.facturation_ht_soir     = ht_soir
+                        jdv.couvert_moyen_soir      = couvert_moyen_soir
+
+
+
+
+
+                        jdv.facturation_ttc_soir    = ttc_soir
+
+                        jdv.nb_couvert_total        = nb_couvert_total
+                        jdv.couvert_moyen           = couvert_moyen
+                        jdv.couvert_moyen_ht        = couvert_moyen_ht
+                        jdv.reglement_cb            = self.reglement(date_debut,'CB')
+                        jdv.reglement_cheque        = self.reglement(date_debut,'CH')
+                        jdv.reglement_espece        = self.reglement(date_debut,'ESP')
+                        jdv.reglement_differe       = self.reglement(date_debut,'DIFF')
+                        jdv.reglement_bon_cadeau    = self.reglement(date_debut,'BC')
+                        jdv.reglement_total         = self.reglement(date_debut)
+                        jdv.facturation_10          = self.tva(date_debut,8)
+                        jdv.facturation_20          = self.tva(date_debut,1)
+                        jdv.facturation_ht          = ht
+                        jdv.facturation_ttc         = ttc
+                        jdv.achat_bon_cadeau_cb     = self.reglement(date_debut,'BC2')
+                        jdv.achat_bon_cadeau_cheque = self.reglement(date_debut,'BC3')
+                        jdv.achat_bon_cadeau_espece = self.reglement(date_debut,'BC1')
 
                     date_debut = datetime.datetime.strptime(date_debut, '%Y-%m-%d')
                     date_debut = date_debut + datetime.timedelta(days=1)
@@ -271,6 +287,38 @@ class IsJournalDesVentesWizard(models.TransientModel):
 
 
 
+                        #nb_ticket      = self.nb_ticket(date_debut)
+                        #nb_ticket_midi = self.nb_ticket(date_debut,'midi')
+                        #nb_ticket_soir = self.nb_ticket(date_debut,'soir')
+
+
+
+#                        jdv.nb_ticket_midi          = nb_ticket_midi
+#                        jdv.nb_ticket_soir          = nb_ticket_soir
+#                        jdv.nb_ticket               = nb_ticket
+
+#                        jdv.ticket_moyen_midi       = ticket_moyen_midi
+#                        jdv.ticket_moyen_soir       = ticket_moyen_soir
+#                        jdv.ticket_moyen_ttc        = ticket_moyen_ttc
+#                        jdv.ticket_moyen_ht         = ticket_moyen_ht
+                        #jdv.montant_caisse          = 10
+                        #jdv.ecart_caisse            = 10
+                        #jdv.remise_banque           = 10
+                        #jdv.ecart_fact_regl         = 10
+                        #jdv.trop_percu              = 10
+
+#                        ticket_moyen_midi=0
+#                        if nb_ticket_midi!=0:
+#                            ticket_moyen_midi=ttc_midi/nb_ticket_midi
+#                        ticket_moyen_soir=0
+#                        if nb_ticket_soir!=0:
+#                            ticket_moyen_soir=ttc_soir/nb_ticket_soir
+#                        ticket_moyen_ttc=0
+#                        if nb_ticket!=0:
+#                            ticket_moyen_ttc=ttc/nb_ticket
+#                        ticket_moyen_ht=0
+#                        if nb_ticket!=0:
+#                            ticket_moyen_ht=ht/nb_ticket
 
 #  now  = datetime.date.today()               # Date du jour
 #  date = now + datetime.timedelta(days=-1)   # Date -1 jour

@@ -9,40 +9,54 @@
                     <group>
                         <group>
                             <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="jour_ouvert"/>
+                        </group>
+                        <group string="Midi">
                             <field name="nb_couvert_midi"/>
+                            <field name="facturation_10_midi"/>
+                            <field name="facturation_20_midi"/>
+                            <field name="facturation_ttc_midi"/>
+                            <field name="facturation_ht_midi"/>
+                            <field name="couvert_moyen_midi"/>
+                        </group>
+                        <group string="Soir">
                             <field name="nb_couvert_soir"/>
-                            <field name="nb_couvert_total"/>
-                            <field name="couvert_moyen"/>
-                            <field name="couvert_moyen_ht"/>
-                            <field name="nb_ticket_midi"/>
-                            <field name="nb_ticket_soir"/>
-                            <field name="nb_ticket"/>
+                            <field name="facturation_10_soir"/>
+                            <field name="facturation_20_soir"/>
+                            <field name="facturation_ttc_soir"/>
+                            <field name="facturation_ht_soir"/>
+                            <field name="couvert_moyen_soir"/>
+                        </group>
+                        <group string="Réglements">
                             <field name="reglement_cb"/>
                             <field name="reglement_cheque"/>
                             <field name="reglement_espece"/>
                             <field name="reglement_differe"/>
                             <field name="reglement_bon_cadeau"/>
                             <field name="reglement_total"/>
+                        </group>
+                        <group string="Achats">
+                            <field name="achat_bon_cadeau_cb"/>
+                            <field name="achat_bon_cadeau_cheque"/>
+                            <field name="achat_bon_cadeau_espece"/>
+                        </group>
+                        <group string="Journée">
+                            <field name="nb_couvert_total"/>
                             <field name="facturation_10"/>
                             <field name="facturation_20"/>
-                            <field name="facturation_ttc_midi"/>
-                            <field name="facturation_ttc_soir"/>
                             <field name="facturation_ttc"/>
                             <field name="facturation_ht"/>
+                            <field name="couvert_moyen"/>
+                            <field name="couvert_moyen_ht"/>
                         </group>
-                        <group>
-                            <field name="ticket_moyen_midi"/>
-                            <field name="ticket_moyen_soir"/>
-                            <field name="ticket_moyen_ttc"/>
-                            <field name="ticket_moyen_ht"/>
+                        <group string="Caisse">
                             <field name="montant_caisse"/>
                             <field name="ecart_caisse"/>
                             <field name="remise_banque"/>
                             <field name="ecart_fact_regl"/>
                             <field name="trop_percu"/>
-                            <field name="achat_bon_cadeau_cb"/>
-                            <field name="achat_bon_cadeau_cheque"/>
-                            <field name="achat_bon_cadeau_espece"/>
                         </group>
                     </group>
                     <group>
@@ -58,46 +72,64 @@
         <field name="arch" type="xml">
             <tree>
                 <field name="name"/>
+                <field name="jour_ouvert"             sum="Total"/>
+
                 <field name="nb_couvert_midi"         sum="Total"/>
+                <field name="facturation_10_midi"     sum="Total"/>
+                <field name="facturation_20_midi"     sum="Total"/>
+                <field name="facturation_ttc_midi"    sum="Total"/>
+                <field name="facturation_ht_midi"     sum="Total"/>
+                <field name="couvert_moyen_midi"/>
+
                 <field name="nb_couvert_soir"         sum="Total"/>
+                <field name="facturation_10_soir"     sum="Total"/>
+                <field name="facturation_20_soir"     sum="Total"/>
+                <field name="facturation_ttc_soir"    sum="Total"/>
+                <field name="facturation_ht_soir"     sum="Total"/>
+                <field name="couvert_moyen_soir"/>
+
                 <field name="nb_couvert_total"        sum="Total"/>
-                <field name="couvert_moyen"/>
-                <field name="couvert_moyen_ht"/>
-                <field name="nb_ticket_midi"          sum="Total"/>
-                <field name="nb_ticket_soir"          sum="Total"/>
-                <field name="nb_ticket"               sum="Total"/>
+
                 <field name="reglement_cb"            sum="Total"/>
                 <field name="reglement_cheque"        sum="Total"/>
                 <field name="reglement_espece"        sum="Total"/>
                 <field name="reglement_differe"       sum="Total"/>
                 <field name="reglement_bon_cadeau"    sum="Total"/>
                 <field name="reglement_total"         sum="Total"/>
+
+                <field name="achat_bon_cadeau_cb"     sum="Total"/>
+                <field name="achat_bon_cadeau_cheque" sum="Total"/>
+                <field name="achat_bon_cadeau_espece" sum="Total"/>
+
                 <field name="facturation_10"          sum="Total"/>
                 <field name="facturation_20"          sum="Total"/>
-                <field name="facturation_ttc_midi"    sum="Total"/>
-                <field name="facturation_ttc_soir"    sum="Total"/>
                 <field name="facturation_ttc"         sum="Total"/>
                 <field name="facturation_ht"          sum="Total"/>
-                <field name="ticket_moyen_midi"/>
-                <field name="ticket_moyen_soir"/>
-                <field name="ticket_moyen_ttc"/>
-                <field name="ticket_moyen_ht"/>
+
+                <field name="couvert_moyen"/>
+                <field name="couvert_moyen_ht"/>
+
                 <field name="montant_caisse"          sum="Total"/>
                 <field name="ecart_caisse"            sum="Total"/>
                 <field name="remise_banque"           sum="Total"/>
                 <field name="ecart_fact_regl"         sum="Total"/>
                 <field name="trop_percu"              sum="Total"/>
-                <field name="achat_bon_cadeau_cb"     sum="Total"/>
-                <field name="achat_bon_cadeau_cheque" sum="Total"/>
-                <field name="achat_bon_cadeau_espece" sum="Total"/>
                 <field name="commentaire"/>
             </tree>
         </field>
     </record>
     <record id="is_journal_des_ventes_action" model="ir.actions.act_window">
-        <field name="name">Journal des ventes</field>
+        <field name="name">Statistiques de ventes</field>
         <field name="res_model">is.journal.des.ventes</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
+    <menuitem 
+        id="is_journal_des_ventes_menu" 
+        sequence="20" 
+        name="Statistiques de ventes"   
+        parent="point_of_sale.menu_point_rep" 
+        action="is_journal_des_ventes_action" 
+    />
+
 </odoo>

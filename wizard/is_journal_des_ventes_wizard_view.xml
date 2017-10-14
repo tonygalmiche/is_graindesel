@@ -18,7 +18,7 @@
         </field>
     </record>
     <record id="is_journal_des_ventes_wizard_action" model="ir.actions.act_window">
-        <field name="name">Journal des ventes</field>
+        <field name="name">Calculer les statistiques</field>
         <field name="res_model">is.journal.des.ventes.wizard</field>
         <field name="view_type">form</field>
         <field name="view_mode">form</field>
@@ -28,8 +28,11 @@
     <menuitem 
         id="is_journal_des_ventes_wizard_menu" 
         sequence="10" 
-        name="Journal des ventes"   
+        name="Calculer les statistiques"   
         parent="point_of_sale.menu_point_rep" 
         action="is_journal_des_ventes_wizard_action" 
     />
+
+
+
 </odoo>
