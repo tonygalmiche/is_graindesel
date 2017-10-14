@@ -5,18 +5,6 @@ import time
 import datetime
 
 
-## TODO : Recherche des montant par type de TVA
-
-# select * from pos_order_line;
-# select * from account_tax_pos_order_line_rel ;
-# select name,description,amount from account_tax where id=8;
-#  name   | description | amount  
-#---------+-------------+---------
-# TVA 10% | 10.0-TTC    | 10.0000
-
-
-
-
 class IsJournalDesVentesWizard(models.TransientModel):
     _name = 'is.journal.des.ventes.wizard'
 
@@ -243,10 +231,6 @@ class IsJournalDesVentesWizard(models.TransientModel):
                         jdv.facturation_ht_soir     = ht_soir
                         jdv.couvert_moyen_soir      = couvert_moyen_soir
 
-
-
-
-
                         jdv.facturation_ttc_soir    = ttc_soir
 
                         jdv.nb_couvert_total        = nb_couvert_total
@@ -283,43 +267,3 @@ class IsJournalDesVentesWizard(models.TransientModel):
             'type': 'ir.actions.act_window',
         }
 
-
-
-
-
-                        #nb_ticket      = self.nb_ticket(date_debut)
-                        #nb_ticket_midi = self.nb_ticket(date_debut,'midi')
-                        #nb_ticket_soir = self.nb_ticket(date_debut,'soir')
-
-
-
-#                        jdv.nb_ticket_midi          = nb_ticket_midi
-#                        jdv.nb_ticket_soir          = nb_ticket_soir
-#                        jdv.nb_ticket               = nb_ticket
-
-#                        jdv.ticket_moyen_midi       = ticket_moyen_midi
-#                        jdv.ticket_moyen_soir       = ticket_moyen_soir
-#                        jdv.ticket_moyen_ttc        = ticket_moyen_ttc
-#                        jdv.ticket_moyen_ht         = ticket_moyen_ht
-                        #jdv.montant_caisse          = 10
-                        #jdv.ecart_caisse            = 10
-                        #jdv.remise_banque           = 10
-                        #jdv.ecart_fact_regl         = 10
-                        #jdv.trop_percu              = 10
-
-#                        ticket_moyen_midi=0
-#                        if nb_ticket_midi!=0:
-#                            ticket_moyen_midi=ttc_midi/nb_ticket_midi
-#                        ticket_moyen_soir=0
-#                        if nb_ticket_soir!=0:
-#                            ticket_moyen_soir=ttc_soir/nb_ticket_soir
-#                        ticket_moyen_ttc=0
-#                        if nb_ticket!=0:
-#                            ticket_moyen_ttc=ttc/nb_ticket
-#                        ticket_moyen_ht=0
-#                        if nb_ticket!=0:
-#                            ticket_moyen_ht=ht/nb_ticket
-
-#  now  = datetime.date.today()               # Date du jour
-#  date = now + datetime.timedelta(days=-1)   # Date -1 jour
-#  return date.strftime('%Y-%m-%d')         

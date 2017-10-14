@@ -6,6 +6,54 @@
         <field name="arch" type="xml">
             <form>
                 <sheet>
+
+                    <div class="oe_right oe_button_box" style="width: 300px;" name="buttons">
+                        <!-- http://fortawesome.github.io/Font-Awesome/icons/ -->
+
+                        <button 
+                            string="Point de vente"
+                            name="action_point_de_vente" type="object" 
+                            class="oe_inline oe_stat_button" icon="fa-navicon"/>
+                        <button 
+                            string="Sessions"
+                            name="action_sessions" type="object"
+                            class="oe_inline oe_stat_button" icon="fa-navicon"
+                        />
+                        <button 
+                            string="Paiements"
+                            name="action_paiements" type="object"
+                            class="oe_inline oe_stat_button" icon="fa-navicon"
+                        />
+                        <button 
+                            string="Commandes"    
+                            name="action_commandes" type="object"
+                            class="oe_inline oe_stat_button" icon="fa-navicon"
+                        />
+                        <button 
+                            string="Ecritures"
+                            help="Ecritures comptables"
+                            name="action_ecriture_comptables" type="object"
+                            class="oe_inline oe_stat_button" icon="fa-navicon"
+                        />
+
+
+
+
+                        <!--
+                        <button class="oe_inline oe_stat_button"   string="Rafraichir" 
+                                help="Redémarrer le navigateur du Rapsberry" name= "rafraichir_raspberry" 
+                                type="object" icon="fa-spinner"/>
+                        <button class="oe_inline oe_stat_button"   string="Arrêter"    
+                                help="Arrêter le Raspberry"        name= "arret_raspberry"     
+                                type="object" icon="fa-power-off "/>
+                        <button class="oe_inline oe_stat_button"   string="Redémarrer" 
+                                help="Redémarrer le Raspberry"     name= "reboot_raspberry"     
+                                type="object" icon="fa-refresh"/>
+                        -->
+                    </div>
+
+
+
                     <group>
                         <group>
                             <field name="name"/>

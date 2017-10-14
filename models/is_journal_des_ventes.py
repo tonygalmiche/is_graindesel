@@ -54,3 +54,104 @@ class IsJournalDesVentes(models.Model):
     commentaire             = fields.Text('Commentaire')
 
 
+
+    @api.multi
+    def action_point_de_vente(self):
+        for obj in self:
+            return {
+                'name': u'Point de vente',
+                'view_type': 'form',
+                'view_mode': 'form,tree',
+                'res_model': 'pos.config',
+                'res_id': 1,
+                'type': 'ir.actions.act_window',
+            }
+
+
+    @api.multi
+    def action_sessions(self):
+        for obj in self:
+            orders=self.env['pos.order'].search([ ('is_journee_service', '=', obj.name)])
+            sessions=[]
+            for order in orders:
+                if order.session_id.id not in sessions:
+                    sessions.append(order.session_id.id)
+            return {
+                'name': u'Sessions',
+                'view_type': 'form',
+                'view_mode': 'tree,form',
+                'res_model': 'pos.session',
+                'type': 'ir.actions.act_window',
+                'domain': [
+                    ('id','in',sessions),
+                ],
+            }
+
+
+    @api.multi
+    def action_commandes(self):
+        for obj in self:
+            orders=self.env['pos.order'].search([ ('is_journee_service', '=', obj.name)])
+            res=[]
+            for order in orders:
+                res.append(order.id)
+            return {
+                'name': u'Sessions',
+                'view_type': 'form',
+                'view_mode': 'tree,form',
+                'res_model': 'pos.order',
+                'type': 'ir.actions.act_window',
+                'domain': [
+                    ('id','in',res),
+                ],
+
+            }
+
+
+    @api.multi
+    def action_paiements(self):
+        for obj in self:
+            orders=self.env['pos.order'].search([ ('is_journee_service', '=', obj.name)])
+            res=[]
+            for order in orders:
+                #res.append(order.session_id.statement_ids)
+                for statement in order.session_id.statement_ids:
+                    if statement.id not in res:
+                        res.append(statement.id)
+            return {
+                'name': u'Sessions',
+                'view_type': 'form',
+                'view_mode': 'tree,form',
+                'res_model': 'account.bank.statement',
+                'type': 'ir.actions.act_window',
+                'domain': [
+                    ('id','in',res),
+                ],
+
+            }
+
+
+    @api.multi
+    def action_ecriture_comptables(self):
+        for obj in self:
+            orders=self.env['pos.order'].search([ ('is_journee_service', '=', obj.name)])
+            moves=[]
+            statements=[]
+            for order in orders:
+                if order.account_move.id not in moves:
+                    moves.append(order.account_move.id)
+                    for statement in order.session_id.statement_ids:
+                        if statement.id not in statements:
+                            statements.append(statement.id)
+            return {
+                'name': u'Sessions',
+                'view_type': 'form',
+                'view_mode': 'tree,form',
+                'res_model': 'account.move.line',
+                'type': 'ir.actions.act_window',
+                'domain': [
+                    '|',('move_id','in',moves),('statement_id','in',statements),
+                ],
+
+            }
+
