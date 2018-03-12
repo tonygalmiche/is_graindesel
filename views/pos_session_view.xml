@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="is_view_pos_session_form" model="ir.ui.view">
+        <field name="name">is_view_pos_session_form</field>
+        <field name="model">pos.session</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_session_form" />
+        <field name="arch" type="xml">
+            <button name="action_stock_picking" position="after">
+                <button 
+                    string="Transactions"
+                    name="action_transactions" type="object" 
+                    class="oe_inline oe_stat_button" icon="fa-navicon"
+                />
+            </button>
+        </field>
+    </record>
+    <record id="is_account_bank_statement_line_tree_view" model="ir.ui.view">
+        <field name="name">is_account_bank_statement_line_tree_view</field>
+        <field name="model">account.bank.statement.line</field>
+        <field name="arch" type="xml">
+            <tree create="0" editable="top">
+                <field name="sequence"            readonly="1" invisible="1"/>
+                <field name="statement_id"        readonly="1" />
+                <field name="journal_id"          invisible="1"/>
+                <field name="date"                readonly="1" />
+                <field name="name"/>
+                <field name="ref"                 readonly="1" />
+                <field name="partner_id"          invisible="1" />
+                <field name="amount"              readonly="1" />
+                <field name="journal_currency_id" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+</odoo>

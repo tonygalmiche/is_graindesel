@@ -131,6 +131,32 @@ class IsJournalDesVentes(models.Model):
             }
 
 
+
+    @api.multi
+    def action_transactions(self):
+        for obj in self:
+            dummy, view_id = self.env['ir.model.data'].get_object_reference('is_graindesel', 'is_account_bank_statement_line_tree_view')
+            orders=self.env['pos.order'].search([ ('is_journee_service', '=', obj.name)])
+            lines=[]
+            for order in orders:
+                for statement in order.session_id.statement_ids:
+                    if statement.id not in lines:
+                        lines.append(statement.id)
+            return {
+                'name': u'Transactions',
+                'view_type': 'form',
+                'view_mode': 'tree',
+                'res_model': 'account.bank.statement.line',
+                'type': 'ir.actions.act_window',
+                'view_id': view_id,
+                'domain': [
+                    ('statement_id','in',lines),
+                    ('pos_statement_id','=',False),
+                ],
+            }
+
+
+
     @api.multi
     def action_ecriture_comptables(self):
         for obj in self:

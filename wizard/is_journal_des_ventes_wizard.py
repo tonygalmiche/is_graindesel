@@ -80,7 +80,7 @@ class IsJournalDesVentesWizard(models.TransientModel):
                 select 
                     po.id order_id,
                     pol.id,
-                    round(sum(pol.price_unit*pol.qty),2) tva
+                    round(sum(pol.price_unit*pol.qty*(1-pol.discount/100)),2) tva
                 from pos_order_line pol inner join pos_order po on pol.order_id=po.id
                                         inner join account_tax_pos_order_line_rel rel on rel.pos_order_line_id=pol.id
                                         inner join account_tax at on at.id=rel.account_tax_id
@@ -112,7 +112,7 @@ class IsJournalDesVentesWizard(models.TransientModel):
                 select 
                     po.id order_id,
                     pol.id,
-                    round(sum(pol.price_unit*pol.qty),2) ttc
+                    round(sum(pol.price_unit*pol.qty*(1-pol.discount/100)),2) ttc
                 from pos_order_line pol inner join pos_order po on pol.order_id=po.id
                                         inner join account_tax_pos_order_line_rel rel on rel.pos_order_line_id=pol.id
                                         inner join account_tax at on at.id=rel.account_tax_id
@@ -141,7 +141,7 @@ class IsJournalDesVentesWizard(models.TransientModel):
                 select 
                     po.id order_id,
                     pol.id,
-                    round(sum(pol.price_unit*pol.qty/(1+at.amount/100)),2) ht
+                    round(sum((1-pol.discount/100)*pol.price_unit*pol.qty/(1+at.amount/100)),2) ht
                 from pos_order_line pol inner join pos_order po on pol.order_id=po.id
                                         inner join account_tax_pos_order_line_rel rel on rel.pos_order_line_id=pol.id
                                         inner join account_tax at on at.id=rel.account_tax_id
@@ -162,12 +162,36 @@ class IsJournalDesVentesWizard(models.TransientModel):
         return ht
 
 
+
+    @api.multi
+    def transaction(self, journee_service, intitule):
+        orders=self.env['pos.order'].search([ ('is_journee_service', '=', journee_service)])
+        sessions=[]
+        for order in orders:
+            if order.session_id not in sessions:
+                sessions.append(order.session_id)
+        val=0
+        for session in sessions:
+            for statement in session.statement_ids:
+                for line in statement.line_ids:
+                    if len(line.pos_statement_id)==0:
+                        if line.name==intitule:
+                            val=val+line.amount
+        return val
+
+
+
+
+
+
     @api.multi
     def journal_des_ventes_action(self, data):
         cr=self._cr
         for obj in self:
             date_debut = datetime.datetime.strptime(obj.date_debut, '%Y-%m-%d').strftime('%Y-%m-%d')
             date_fin   = datetime.datetime.strptime(obj.date_fin  , '%Y-%m-%d').strftime('%Y-%m-%d')
+
+
             if obj.date_fin>=obj.date_debut:
                 jdv_obj=self.env['is.journal.des.ventes']
                 while date_debut<=date_fin:
@@ -249,6 +273,27 @@ class IsJournalDesVentesWizard(models.TransientModel):
                         jdv.achat_bon_cadeau_cb     = self.reglement(date_debut,'BC2')
                         jdv.achat_bon_cadeau_cheque = self.reglement(date_debut,'BC3')
                         jdv.achat_bon_cadeau_espece = self.reglement(date_debut,'BC1')
+
+
+                        jdv.remise_banque = -self.transaction(date_debut,'BANQUE')
+                        jdv.trop_percu    = self.transaction(date_debut,'POURBOIRE')
+
+#                        #** Recherche du pourboire de la journée ***************
+#                        orders=self.env['pos.order'].search([ ('is_journee_service', '=', date_debut)])
+#                        sessions=[]
+#                        for order in orders:
+#                            if order.session_id not in sessions:
+#                                sessions.append(order.session_id)
+#                        trop_percu=0
+#                        for session in sessions:
+#                            for statement in session.statement_ids:
+#                                for line in statement.line_ids:
+#                                    if len(line.pos_statement_id)==0:
+#                                        if line.name=='POURBOIRE':
+#                                            trop_percu=trop_percu+line.amount
+#                        jdv.trop_percu=trop_percu
+#                        #*******************************************************
+
 
                     date_debut = datetime.datetime.strptime(date_debut, '%Y-%m-%d')
                     date_debut = date_debut + datetime.timedelta(days=1)
