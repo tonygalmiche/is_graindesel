@@ -5,3 +5,4 @@ import pos_order
 import pos_session
 import is_journal_des_ventes
 import account_invoice
+import is_export_compta

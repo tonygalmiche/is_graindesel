@@ -32,6 +32,7 @@ InfoSaône - Module Odoo Grain de Sel
         'views/is_journal_des_ventes_view.xml',
         'views/pos_session_view.xml',
         'views/account_invoice_view.xml',
+        'views/is_export_compta_view.xml',
         'wizard/is_journal_des_ventes_wizard_view.xml',
     ],
     'installable': True,
