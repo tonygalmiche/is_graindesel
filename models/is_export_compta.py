@@ -212,7 +212,7 @@ class is_export_compta(models.Model):
                     self.c(obj.id,date,compte,libelle,sens,montant)
 
                 if row[10]:
-                    compte  = '70776000'
+                    compte  = '70716000'
                     libelle = 'Facturation TVA 20%'
                     sens    = 'C'
                     montant = row[10]
@@ -221,13 +221,11 @@ class is_export_compta(models.Model):
 
 
                 if row[11]:
-                    compte  = '46710000'
+                    compte  = ''
                     libelle = 'Ecart facture pour service'
-                    sens    = 'C'
                     montant = row[11]
-                    credit=credit+montant
-                    self.c(obj.id,date,compte,libelle,sens,montant)
-
+                    self.c(obj.id,date,'46710000',libelle,'C',montant)
+                    self.c(obj.id,date,'58000000',libelle,'D',montant)
 
                 ecart=round(credit-debit,2)
                 if ecart:
