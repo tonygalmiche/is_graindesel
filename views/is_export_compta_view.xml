@@ -115,7 +115,7 @@
 
 
         <!-- Export comptable -->
-        <record id="is_export_compta_action" model="ir.actions.act_window">
+        <record id="is_export_comptabilite_action" model="ir.actions.act_window">
             <field name="name">Export Compta</field>
             <field name="res_model">is.export.compta</field>
             <field name="view_type">form</field>
@@ -124,7 +124,7 @@
             <field name="context">{}</field>
         </record>
         <menuitem   
-            action="is_export_compta_action"  
+            action="is_export_comptabilite_action"  
             id="is_export_compta_menu" 
             parent="point_of_sale.menu_point_rep" 
             sequence="30"
