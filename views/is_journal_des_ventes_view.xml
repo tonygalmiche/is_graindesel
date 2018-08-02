@@ -190,6 +190,7 @@
         <field name="res_model">is.journal.des.ventes</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form,pivot</field>
+        <field name="view_id" ref="is_journal_des_ventes_tree_view"/>
     </record>
     <menuitem 
         id="is_journal_des_ventes_menu" 
@@ -205,7 +206,7 @@
 
 
 
-    <!--
+
     <record id="is_export_compta_tree_view" model="ir.ui.view">
         <field name="name">is_export_compta_tree_view</field>
         <field name="model">is.journal.des.ventes</field>
@@ -230,21 +231,21 @@
             </tree>
         </field>
     </record>
-    <record id="is_export_compta_action" model="ir.actions.act_window">
-        <field name="name">Export compta</field>
+    <record id="is_statistiques_compta_action" model="ir.actions.act_window">
+        <field name="name">Statistiques compta</field>
         <field name="res_model">is.journal.des.ventes</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form,pivot</field>
         <field name="view_id" ref="is_export_compta_tree_view"/>
     </record>
     <menuitem 
-        id="is_export_compta_menu" 
+        id="is_statistiques_compta_menu" 
         sequence="30" 
-        name="Export compta"   
+        name="Statistiques compta"   
         parent="point_of_sale.menu_point_rep" 
-        action="is_export_compta_action" 
+        action="is_statistiques_compta_action" 
     />
-    -->
+
 
     <record id="is_journal_des_ventes_pivot_view" model="ir.ui.view">
         <field name="name">is_journal_des_ventes_pivot_view</field>
