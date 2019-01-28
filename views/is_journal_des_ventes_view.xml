@@ -6,10 +6,8 @@
         <field name="arch" type="xml">
             <form>
                 <sheet>
-
                     <div class="oe_right oe_button_box" style="width: 300px;" name="buttons">
                         <!-- http://fortawesome.github.io/Font-Awesome/icons/ -->
-
                         <button 
                             string="Point de vente"
                             name="action_point_de_vente" type="object" 
@@ -40,25 +38,7 @@
                             name="action_ecriture_comptables" type="object"
                             class="oe_inline oe_stat_button" icon="fa-navicon"
                         />
-
-
-
-
-                        <!--
-                        <button class="oe_inline oe_stat_button"   string="Rafraichir" 
-                                help="Redémarrer le navigateur du Rapsberry" name= "rafraichir_raspberry" 
-                                type="object" icon="fa-spinner"/>
-                        <button class="oe_inline oe_stat_button"   string="Arrêter"    
-                                help="Arrêter le Raspberry"        name= "arret_raspberry"     
-                                type="object" icon="fa-power-off "/>
-                        <button class="oe_inline oe_stat_button"   string="Redémarrer" 
-                                help="Redémarrer le Raspberry"     name= "reboot_raspberry"     
-                                type="object" icon="fa-refresh"/>
-                        -->
                     </div>
-
-
-
                     <group>
                         <group>
                             <field name="name"/>
@@ -121,9 +101,37 @@
     </record>
 
 
+    <record id="is_journal_des_ventes_search_view" model="ir.ui.view">
+        <field name="name">is_journal_des_ventes_search_view</field>
+        <field name="model">is.journal.des.ventes</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" />
+                <filter string="Ce mois"        name="ce_mois"        domain="[('name','ilike',context_today().strftime('%Y-%m'))]"/>
+                <filter string="Mois précédent" name="mois_precedent" domain="[('name','ilike',(context_today()+datetime.timedelta(days=-29)).strftime('%Y-%m'))]"/>
+            </search>
+        </field>
+    </record>
 
+
+    <record id="is_journal_des_ventes_pivot_view" model="ir.ui.view">
+        <field name="name">is_journal_des_ventes_pivot_view</field>
+        <field name="model">is.journal.des.ventes</field>
+        <field name="arch" type="xml">
+            <pivot string="Statistiques par mois">
+                <field name="name" type="row"/>
+                <field name="facturation_10"  type="measure"/>
+                <field name="facturation_20"  type="measure"/>
+                <field name="facturation_ttc" type="measure"/>
+                <field name="facturation_ht"  type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+
+    <!-- Statistiques ventes 1 -->
     <record id="is_journal_des_ventes_tree_view" model="ir.ui.view">
-        <field name="name">is_journal_des_ventes_view</field>
+        <field name="name">is_journal_des_ventes_tree_view</field>
         <field name="model">is.journal.des.ventes</field>
         <field name="arch" type="xml">
             <tree>
@@ -174,19 +182,8 @@
             </tree>
         </field>
     </record>
-    <record id="is_journal_des_ventes_search_view" model="ir.ui.view">
-        <field name="name">is_journal_des_ventes_search_view</field>
-        <field name="model">is.journal.des.ventes</field>
-        <field name="arch" type="xml">
-            <search>
-                <field name="name" />
-                <filter string="Ce mois"        name="ce_mois"        domain="[('name','ilike',context_today().strftime('%Y-%m'))]"/>
-                <filter string="Mois précédent" name="mois_precedent" domain="[('name','ilike',(context_today()+datetime.timedelta(days=-29)).strftime('%Y-%m'))]"/>
-            </search>
-        </field>
-    </record>
     <record id="is_journal_des_ventes_action" model="ir.actions.act_window">
-        <field name="name">Statistiques de ventes</field>
+        <field name="name">Statistiques ventes 1</field>
         <field name="res_model">is.journal.des.ventes</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form,pivot</field>
@@ -195,18 +192,88 @@
     <menuitem 
         id="is_journal_des_ventes_menu" 
         sequence="20" 
-        name="Statistiques de ventes"   
+        name="Statistiques ventes 1"
         parent="point_of_sale.menu_point_rep" 
         action="is_journal_des_ventes_action" 
     />
 
 
+    <!-- Statistiques ventes 2 : TODO : Nouvelle demande de JRB du 28/01/2019 -->
+    <record id="is_journal_des_ventes2_tree_view" model="ir.ui.view">
+        <field name="name">is_journal_des_ventes2_tree_view</field>
+        <field name="model">is.journal.des.ventes</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="jour_ouvert"             sum="Total"/>
+
+                <field name="nb_couvert_midi"         sum="Total"/>
+                <field name="facturation_10_midi"     sum="Total"/>
+                <field name="facturation_20_midi"     sum="Total"/>
+                <field name="facturation_ttc_midi"    sum="Total"/>
+                <field name="facturation_ht_midi"     sum="Total"/>
+                <field name="couvert_moyen_midi"/>
+
+                <field name="nb_couvert_soir"         sum="Total"/>
+                <field name="facturation_10_soir"     sum="Total"/>
+                <field name="facturation_20_soir"     sum="Total"/>
+                <field name="facturation_ttc_soir"    sum="Total"/>
+                <field name="facturation_ht_soir"     sum="Total"/>
+                <field name="couvert_moyen_soir"/>
+
+                <field name="nb_couvert_total"        sum="Total"/>
+
+                <!--
+                <field name="reglement_cb"            sum="Total"/>
+                <field name="reglement_cheque"        sum="Total"/>
+                <field name="reglement_espece"        sum="Total"/>
+                <field name="reglement_differe"       sum="Total"/>
+                <field name="reglement_bon_cadeau"    sum="Total"/>
+                <field name="reglement_total"         sum="Total"/>
+
+                <field name="achat_bon_cadeau_cb"     sum="Total"/>
+                <field name="achat_bon_cadeau_cheque" sum="Total"/>
+                <field name="achat_bon_cadeau_espece" sum="Total"/>
 
 
+                <field name="facturation_10"          sum="Total"/>
+                <field name="facturation_20"          sum="Total"/>
+                <field name="facturation_ttc"         sum="Total"/>
+                -->
+
+                <field name="facturation_ht"          sum="Total"/>
+
+                <!--<field name="couvert_moyen"/>-->
+                <field name="couvert_moyen_ht"/>
+
+                <!--
+                <field name="montant_caisse"          sum="Total"/>
+                <field name="ecart_caisse"            sum="Total"/>
+                <field name="remise_banque"           sum="Total"/>
+                <field name="ecart_fact_regl"         sum="Total"/>
+                <field name="trop_percu"              sum="Total"/>
+                <field name="commentaire"/>
+                -->
+            </tree>
+        </field>
+    </record>
+    <record id="is_journal_des_ventes2_action" model="ir.actions.act_window">
+        <field name="name">Statistiques ventes 2</field>
+        <field name="res_model">is.journal.des.ventes</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,pivot</field>
+        <field name="view_id" ref="is_journal_des_ventes2_tree_view"/>
+    </record>
+    <menuitem 
+        id="is_journal_des_ventes2_menu" 
+        sequence="22" 
+        name="Statistiques ventes 2"
+        parent="point_of_sale.menu_point_rep" 
+        action="is_journal_des_ventes2_action" 
+    />
 
 
-
-
+    <!-- Statistiques compta -->
     <record id="is_export_compta_tree_view" model="ir.ui.view">
         <field name="name">is_export_compta_tree_view</field>
         <field name="model">is.journal.des.ventes</field>
@@ -247,23 +314,7 @@
     />
 
 
-    <record id="is_journal_des_ventes_pivot_view" model="ir.ui.view">
-        <field name="name">is_journal_des_ventes_pivot_view</field>
-        <field name="model">is.journal.des.ventes</field>
-        <field name="arch" type="xml">
-            <pivot string="Statistiques par mois">
-                <field name="name" type="row"/>
-                <field name="facturation_10"  type="measure"/>
-                <field name="facturation_20"  type="measure"/>
-                <field name="facturation_ttc" type="measure"/>
-                <field name="facturation_ht"  type="measure"/>
-            </pivot>
-        </field>
-    </record>
-
-
-
-
+    <!-- Menu 'Statistiques / Statistiques' -->
     <record id="is_journal_des_ventes_statistiques_action" model="ir.actions.act_window">
         <field name="name">Statistiques</field>
         <field name="res_model">is.journal.des.ventes</field>
@@ -271,7 +322,6 @@
         <field name="view_mode">pivot,graph,tree,form</field>
         <field name="view_id" ref="is_journal_des_ventes_pivot_view"/>
     </record>
-
     <menuitem 
         id="is_journal_des_ventes_statistiques_main_menu" 
         sequence="100" 
@@ -285,9 +335,5 @@
         parent="is_journal_des_ventes_statistiques_main_menu" 
         action="is_journal_des_ventes_statistiques_action" 
     />
-
-
-
-
 
 </odoo>
