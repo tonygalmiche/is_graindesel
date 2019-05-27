@@ -159,7 +159,7 @@ class is_export_compta(models.Model):
                     self.c(obj.id,date,compte,libelle,sens,montant)
 
                 if row[3]:
-                    compte  = '58000000'
+                    compte  = '53000000'
                     libelle = 'Reglement Espece'
                     sens    = 'D'
                     montant = row[3]
@@ -186,7 +186,7 @@ class is_export_compta(models.Model):
                     montant = row[6]
                     libelle = 'Vente Bon Cadeaux Espece'
                     self.c(obj.id,date,'41910000',libelle,'C',montant)
-                    self.c(obj.id,date,'58000000',libelle,'D',montant)
+                    self.c(obj.id,date,'53000000',libelle,'D',montant)
 
                 if row[7]:
                     montant = row[7]
@@ -225,7 +225,7 @@ class is_export_compta(models.Model):
                     libelle = 'Ecart facture pour service'
                     montant = row[11]
                     self.c(obj.id,date,'46710000',libelle,'C',montant)
-                    self.c(obj.id,date,'58000000',libelle,'D',montant)
+                    self.c(obj.id,date,'53000000',libelle,'D',montant)
 
                 ecart=round(credit-debit,2)
                 if ecart:
