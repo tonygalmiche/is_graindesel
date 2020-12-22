@@ -12,6 +12,7 @@ class IsJournalDesVentes(models.Model):
     jour_ouvert             = fields.Float('Jour ouvert', digits=(12,1))
 
     nb_couvert_midi         = fields.Integer('Nb couverts midi')
+    facturation_55_midi     = fields.Float('Facturation TVA 5.5% midi')
     facturation_10_midi     = fields.Float('Facturation TVA 10% midi')
     facturation_20_midi     = fields.Float('Facturation TVA 20% midi')
     facturation_ttc_midi    = fields.Float('Facturation TTC midi')
@@ -19,6 +20,7 @@ class IsJournalDesVentes(models.Model):
     couvert_moyen_midi      = fields.Float('Couvert moyen HT midi')
 
     nb_couvert_soir         = fields.Integer('Nb couverts soir')
+    facturation_55_soir     = fields.Float('Facturation TVA 5.5% soir')
     facturation_10_soir     = fields.Float('Facturation TVA 10% soir')
     facturation_20_soir     = fields.Float('Facturation TVA 20% soir')
     facturation_ttc_soir    = fields.Float('Facturation TTC soir')
@@ -38,6 +40,7 @@ class IsJournalDesVentes(models.Model):
     achat_bon_cadeau_cheque = fields.Float('Achat bon cadeau chèque')
     achat_bon_cadeau_espece = fields.Float('Achat bon cadeau espèce')
 
+    facturation_55          = fields.Float('Facturation TVA 5.5%')
     facturation_10          = fields.Float('Facturation TVA 10%')
     facturation_20          = fields.Float('Facturation TVA 20%')
     facturation_ttc         = fields.Float('Facturation TTC')

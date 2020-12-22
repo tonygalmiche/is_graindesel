@@ -48,6 +48,7 @@
                         </group>
                         <group string="Midi">
                             <field name="nb_couvert_midi"/>
+                            <field name="facturation_55_midi"/>
                             <field name="facturation_10_midi"/>
                             <field name="facturation_20_midi"/>
                             <field name="facturation_ttc_midi"/>
@@ -56,6 +57,7 @@
                         </group>
                         <group string="Soir">
                             <field name="nb_couvert_soir"/>
+                            <field name="facturation_55_soir"/>
                             <field name="facturation_10_soir"/>
                             <field name="facturation_20_soir"/>
                             <field name="facturation_ttc_soir"/>
@@ -77,6 +79,7 @@
                         </group>
                         <group string="Journée">
                             <field name="nb_couvert_total"/>
+                            <field name="facturation_55"/>
                             <field name="facturation_10"/>
                             <field name="facturation_20"/>
                             <field name="facturation_ttc"/>
@@ -120,6 +123,7 @@
         <field name="arch" type="xml">
             <pivot string="Statistiques par mois">
                 <field name="name" type="row"/>
+                <field name="facturation_55"  type="measure"/>
                 <field name="facturation_10"  type="measure"/>
                 <field name="facturation_20"  type="measure"/>
                 <field name="facturation_ttc" type="measure"/>
@@ -139,6 +143,7 @@
                 <field name="jour_ouvert"             sum="Total"/>
 
                 <field name="nb_couvert_midi"         sum="Total"/>
+                <field name="facturation_55_midi"     sum="Total"/>
                 <field name="facturation_10_midi"     sum="Total"/>
                 <field name="facturation_20_midi"     sum="Total"/>
                 <field name="facturation_ttc_midi"    sum="Total"/>
@@ -146,6 +151,7 @@
                 <field name="couvert_moyen_midi"/>
 
                 <field name="nb_couvert_soir"         sum="Total"/>
+                <field name="facturation_55_soir"     sum="Total"/>
                 <field name="facturation_10_soir"     sum="Total"/>
                 <field name="facturation_20_soir"     sum="Total"/>
                 <field name="facturation_ttc_soir"    sum="Total"/>
@@ -165,6 +171,7 @@
                 <field name="achat_bon_cadeau_cheque" sum="Total"/>
                 <field name="achat_bon_cadeau_espece" sum="Total"/>
 
+                <field name="facturation_55"          sum="Total"/>
                 <field name="facturation_10"          sum="Total"/>
                 <field name="facturation_20"          sum="Total"/>
                 <field name="facturation_ttc"         sum="Total"/>
@@ -208,6 +215,7 @@
                 <field name="jour_ouvert"             sum="Total"/>
 
                 <field name="nb_couvert_midi"         sum="Total"/>
+                <field name="facturation_55_midi"     sum="Total"/>
                 <field name="facturation_10_midi"     sum="Total"/>
                 <field name="facturation_20_midi"     sum="Total"/>
                 <field name="facturation_ttc_midi"    sum="Total"/>
@@ -215,6 +223,7 @@
                 <field name="couvert_moyen_midi"/>
 
                 <field name="nb_couvert_soir"         sum="Total"/>
+                <field name="facturation_55_soir"     sum="Total"/>
                 <field name="facturation_10_soir"     sum="Total"/>
                 <field name="facturation_20_soir"     sum="Total"/>
                 <field name="facturation_ttc_soir"    sum="Total"/>
@@ -289,6 +298,7 @@
                 <field name="achat_bon_cadeau_cb"     sum="Total"/>
                 <field name="achat_bon_cadeau_cheque" sum="Total"/>
                 <field name="achat_bon_cadeau_espece" sum="Total"/>
+                <field name="facturation_55"          sum="Total"/>
                 <field name="facturation_10"          sum="Total"/>
                 <field name="facturation_20"          sum="Total"/>
                 <field name="facturation_ttc"         sum="Total"/>

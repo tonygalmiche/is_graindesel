@@ -242,6 +242,7 @@ class IsJournalDesVentesWizard(models.TransientModel):
                         jdv.jour_ouvert             = jour_ouvert
 
                         jdv.nb_couvert_midi         = nb_couvert_midi
+                        jdv.facturation_55_midi     = self.tva(date_debut,41,'midi')
                         jdv.facturation_10_midi     = self.tva(date_debut,8,'midi')
                         jdv.facturation_20_midi     = self.tva(date_debut,1,'midi')
                         jdv.facturation_ttc_midi    = ttc_midi
@@ -249,6 +250,7 @@ class IsJournalDesVentesWizard(models.TransientModel):
                         jdv.couvert_moyen_midi      = couvert_moyen_midi
 
                         jdv.nb_couvert_soir         = nb_couvert_soir
+                        jdv.facturation_55_soir     = self.tva(date_debut,41,'soir')
                         jdv.facturation_10_soir     = self.tva(date_debut,8,'soir')
                         jdv.facturation_20_soir     = self.tva(date_debut,1,'soir')
                         jdv.facturation_ttc_soir    = ttc_soir
@@ -266,6 +268,7 @@ class IsJournalDesVentesWizard(models.TransientModel):
                         jdv.reglement_differe       = self.reglement(date_debut,'DIFF')
                         jdv.reglement_bon_cadeau    = self.reglement(date_debut,'BC')
                         jdv.reglement_total         = self.reglement(date_debut)
+                        jdv.facturation_55          = self.tva(date_debut,41)
                         jdv.facturation_10          = self.tva(date_debut,8)
                         jdv.facturation_20          = self.tva(date_debut,1)
                         jdv.facturation_ht          = ht

@@ -128,7 +128,8 @@ class is_export_compta(models.Model):
                     achat_bon_cadeau_cb,
                     facturation_10,
                     facturation_20,
-                    trop_percu
+                    trop_percu,
+                    facturation_55
                 FROM is_journal_des_ventes
                 WHERE name>='"""+str(obj.date_debut)+"""' and name <='"""+str(obj.date_fin)+"""'
                 ORDER BY name
@@ -219,13 +220,20 @@ class is_export_compta(models.Model):
                     credit=credit+montant
                     self.c(obj.id,date,compte,libelle,sens,montant)
 
-
                 if row[11]:
                     compte  = ''
                     libelle = 'Ecart facture pour service'
                     montant = row[11]
                     self.c(obj.id,date,'46710000',libelle,'C',montant)
                     self.c(obj.id,date,'53000000',libelle,'D',montant)
+
+                if row[12]:
+                    compte  = '70721000'
+                    libelle = 'Facturation TVA 5.5%'
+                    sens    = 'C'
+                    montant = row[12]
+                    credit=credit+montant
+                    self.c(obj.id,date,compte,libelle,sens,montant)
 
                 ecart=round(credit-debit,2)
                 if ecart:
